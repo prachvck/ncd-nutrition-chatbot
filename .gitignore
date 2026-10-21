@@ -1,0 +1,36 @@
+# Python
+venv/
+__pycache__/
+*.py[cod]
+
+# Environment
+.env
+
+# VS Code
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Images
+output.png
+
+# Executables
+*.exe
+
+# Scraper resume caches (สร้างใหม่ได้ตอนรัน scripts/scrape_*.py)
+.thaifcd_seen_ids.txt
+*.seen_slugs.txt
+data/raw/*.seen_slugs.txt
+
+# โมเดลเก่าที่ไม่ใช้แล้ว (ann_model.keras + ann_model.meta.json คือตัวที่ใช้จริง)
+models/*_old_*.keras
+# ผลรันสคริปต์วัดผล (สร้างใหม่ได้) — เก็บเฉพาะที่จะใช้ในรายงานโดย git add -f
+eval/results/
+
+# PDF แนวทางเวชปฏิบัติ (ลิขสิทธิ์ของสมาคม — เก็บในเครื่อง ไม่ขึ้น git)
+rag/sources/thai/pdf/*.pdf
+
+# โมเดล CNN ของ Kittipong (107MB checkpoint) — ไม่ขึ้น git; แชร์ผ่าน ZIP/Drive/Supabase Storage
+THFOOD100_Chatbot_Inference/
+.venv/

@@ -1,0 +1,17 @@
+{
+  "fingerprint": "a024b1465d61d788",
+  "n_train": 749,
+  "train_agreement": 0.9987,
+  "features": [
+    "energy_kcal",
+    "water_g",
+    "protein_g",
+    "fat_g",
+    "carb_available_g",
+    "sodium_mg",
+    "potassium_mg",
+    "calcium_mg",
+    "magnesium_mg",
+    "phosphorus_mg"
+  ]
+}

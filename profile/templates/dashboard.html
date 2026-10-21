@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<title>สรุปการกิน · อิ่มจัง</title>
+<style>
+  :root{
+    --brand:#1D9E75; --brand-dark:#147a5a; --brand-soft:#e8f6f0;
+    --ok:#1D9E75; --high:#e5533d; --low:#f0a020; --none:#c9ced6;
+    --ink:#1f2933; --muted:#6b7480; --line:#eef0f3; --bg:#f4f6f8; --card:#fff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Sarabun','Noto Sans Thai','Leelawadee UI',system-ui,sans-serif;background:var(--bg);
+       color:var(--ink);-webkit-font-smoothing:antialiased;padding-bottom:28px}
+  header{background:var(--brand);color:#fff;padding:18px 18px 14px}
+  header h1{font-size:20px;font-weight:700}
+  header .sub{font-size:13px;opacity:.92;margin-top:4px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  .chip{background:rgba(255,255,255,.2);border-radius:999px;padding:2px 10px;font-size:12px}
+  .tabs{display:flex;background:#fff;position:sticky;top:0;z-index:5;box-shadow:0 1px 0 var(--line)}
+  .tab{flex:1;text-align:center;padding:13px 0 11px;font-size:15px;color:var(--muted);border-bottom:3px solid transparent;cursor:pointer;user-select:none}
+  .tab.active{color:var(--brand);border-color:var(--brand);font-weight:700}
+  main{padding:14px;max-width:560px;margin:0 auto}
+  .card{background:var(--card);border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(16,24,40,.06)}
+  .card h2{font-size:16px;font-weight:700;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+  .muted{color:var(--muted);font-size:13px}
+  /* date strip */
+  .strip{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding:2px 2px 4px;position:relative}
+  .strip::-webkit-scrollbar{display:none}
+  .day{flex:1 0 42px;text-align:center;padding:8px 0 6px;border-radius:14px;cursor:pointer;position:relative}
+  .day .n{font-size:17px;font-weight:700}
+  .day .w{font-size:11px;color:var(--muted);margin-top:2px}
+  .day .dot{width:6px;height:6px;border-radius:50%;background:var(--brand);margin:5px auto 0;opacity:0}
+  .day.logged .dot{opacity:1}
+  .day.sel{background:var(--brand);color:#fff}
+  .day.sel .w{color:#e3f5ee}.day.sel .dot{background:#fff}
+  .datehead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+  .datehead b{font-size:17px}
+  /* ring */
+  .ringwrap{display:flex;align-items:center;gap:18px}
+  .ring{position:relative;width:132px;height:132px;flex:0 0 132px}
+  .ring .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .ring .big{font-size:26px;font-weight:800}
+  .ring .of{font-size:12px;color:var(--muted)}
+  .kpi{font-size:14px;line-height:1.9}
+  .kpi b{font-size:16px}
+  /* bars */
+  .nut{margin:12px 0}
+  .nut .top{display:flex;justify-content:space-between;font-size:14px;margin-bottom:5px}
+  .nut .val{font-weight:700}
+  .bar{height:9px;background:var(--line);border-radius:99px;overflow:hidden;position:relative}
+  .bar>i{display:block;height:100%;border-radius:99px}
+  .pill{font-size:11px;font-weight:700;border-radius:99px;padding:2px 8px;margin-left:6px;color:#fff}
+  .pill.ok{background:var(--ok)}.pill.high{background:var(--high)}.pill.low{background:var(--low)}.pill.none{background:var(--none)}
+  /* meals */
+  .meal{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+  .meal:last-child{border-bottom:none}
+  .meal .tag{font-size:11px;color:var(--brand-dark);background:var(--brand-soft);border-radius:6px;padding:2px 7px;margin-right:8px;white-space:nowrap}
+  .meal .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+  .meal .k{font-weight:700;margin-left:8px;white-space:nowrap}
+  .empty{text-align:center;padding:22px 8px;color:var(--muted);font-size:14px;line-height:1.7}
+  .empty .ic{font-size:34px;display:block;margin-bottom:4px}
+  /* weekly */
+  .verdict{display:flex;gap:14px;align-items:center}
+  .verdict .face{font-size:40px;width:64px;height:64px;border-radius:20px;display:flex;align-items:center;justify-content:center;flex:0 0 64px}
+  .verdict .lbl{font-size:20px;font-weight:800}
+  .verdict p{font-size:14px;line-height:1.6;margin-top:3px}
+  .v-good .face{background:#e3f6ee}.v-good .lbl{color:var(--ok)}
+  .v-fair .face{background:#fff4dc}.v-fair .lbl{color:#c98100}
+  .v-poor .face{background:#fde8e4}.v-poor .lbl{color:var(--high)}
+  .v-nodata .face{background:var(--line)}
+  .finding{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+  .finding.high{border-left:5px solid var(--high)}.finding.low{border-left:5px solid var(--low)}.finding.ok{border-left:5px solid var(--ok)}
+  .finding .t{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:15px}
+  .finding .n{font-size:13px;color:var(--muted);margin-top:2px}
+  .finding .why{font-size:13px;background:#f6f7f9;border-radius:8px;padding:7px 9px;margin-top:8px;line-height:1.5}
+  .finding .adv{font-size:14px;margin-top:8px;line-height:1.55}
+  .crit{font-size:11px;color:#8a5a00;background:#fff1cf;border-radius:6px;padding:1px 6px;margin-left:6px;font-weight:600}
+  .tips li{font-size:14px;line-height:1.6;margin:0 0 8px 18px}
+  .cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .cmp .box{background:#f7f9fa;border-radius:12px;padding:10px 12px}
+  .cmp .v{font-size:18px;font-weight:800;margin-top:2px}
+  .cmp .d{font-size:12px;margin-top:2px}
+  .up{color:var(--high)}.down{color:var(--ok)}
+  .legend{display:flex;gap:12px;font-size:12px;color:var(--muted);margin-top:6px}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+  .disclaimer{font-size:12px;color:var(--muted);text-align:center;line-height:1.6;padding:6px 10px}
+  .loading{padding:60px 20px;text-align:center;color:var(--muted)}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+<header>
+  <h1>📊 สรุปการกินของฉัน</h1>
+  <div class="sub" id="who">กำลังโหลด…</div>
+</header>
+<div class="tabs">
+  <div class="tab active" data-tab="daily">รายวัน</div>
+  <div class="tab" data-tab="weekly">วิเคราะห์ 7 วัน</div>
+</div>
+<main>
+  <div id="loading" class="loading">⏳ กำลังโหลดข้อมูล…</div>
+  <div id="error" class="loading hidden"></div>
+
+  <!-- รายวัน -->
+  <section id="daily" class="hidden">
+    <div class="card">
+      <div class="datehead"><b id="dateLabel"></b><span class="muted" id="dateHint"></span></div>
+      <div class="strip" id="strip"></div>
+    </div>
+    <div class="card">
+      <h2>แคลอรี่วันนี้</h2>
+      <div class="ringwrap">
+        <div class="ring">
+          <svg width="132" height="132" viewBox="0 0 132 132">
+            <circle cx="66" cy="66" r="56" fill="none" stroke="#eef0f3" stroke-width="14"/>
+            <circle id="ringArc" cx="66" cy="66" r="56" fill="none" stroke="#1D9E75" stroke-width="14"
+                    stroke-linecap="round" transform="rotate(-90 66 66)" stroke-dasharray="0 999"/>
+          </svg>
+          <div class="center"><div class="big" id="kcalBig">0</div><div class="of" id="kcalOf">/ 0 kcal</div></div>
+        </div>
+        <div class="kpi" id="kcalKpi"></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>สารอาหาร <span class="muted" style="font-weight:400">เทียบเป้าต่อวัน</span></h2>
+      <div id="nutBars"></div>
+      <div class="legend"><span><i style="background:var(--ok)"></i>พอดี</span><span><i style="background:var(--high)"></i>เกิน</span><span><i style="background:var(--low)"></i>ขาด</span></div>
+    </div>
+    <div class="card">
+      <h2>กินอะไรไปบ้าง <span class="muted" id="mealCount" style="font-weight:400"></span></h2>
+      <div id="meals"></div>
+    </div>
+  </section>
+
+  <!-- รายสัปดาห์ -->
+  <section id="weekly" class="hidden">
+    <div class="card" id="verdictCard"></div>
+    <div class="card">
+      <h2>พลังงาน 7 วัน <span class="muted" style="font-weight:400" id="chartNote"></span></h2>
+      <div id="chart"></div>
+    </div>
+    <div class="card">
+      <h2>ผลวิเคราะห์รายสารอาหาร</h2>
+      <div class="muted" id="basisNote" style="margin:-6px 0 10px"></div>
+      <div id="findings"></div>
+    </div>
+    <div class="card" id="tipsCard">
+      <h2>สัปดาห์หน้าลองทำแบบนี้ 💡</h2>
+      <ul class="tips" id="tips"></ul>
+    </div>
+    <div class="card">
+      <h2>เทียบกับสัปดาห์ก่อน</h2>
+      <div class="cmp" id="cmp"></div>
+    </div>
+  </section>
+  <p class="disclaimer">ข้อมูลนี้ใช้ช่วยวางแผนการกิน ไม่ใช่คำวินิจฉัยทางการแพทย์<br>ถ้ามีอาการผิดปกติหรือต้องการปรับอาหารเฉพาะตัว ปรึกษาแพทย์หรือนักกำหนดอาหาร</p>
+</main>
+
+<script>
+const LIFF_ID = "{{ liff_id }}";
+const WD = ["อา.","จ.","อ.","พ.","พฤ.","ศ.","ส."];
+const MONTH = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+const ST_TH = {ok:"พอดี", high:"เกิน", low:"ขาด", none:"ยังไม่ถึงเป้า"};
+const COLOR = {ok:"var(--ok)", high:"var(--high)", low:"var(--low)", none:"var(--none)"};
+let DATA = null, selIdx = 0;
+
+const $ = id => document.getElementById(id);
+const fmt = n => (n == null ? "-" : Math.round(n).toLocaleString("th-TH"));
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function parseD(s){ const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d); }
+function thaiDate(s){ const d = parseD(s); return `${d.getDate()} ${MONTH[d.getMonth()]} ${d.getFullYear()+543}`; }
+
+async function init(){
+  let uid = "", token = "";
+  try{
+    await liff.init({ liffId: LIFF_ID });
+    if (!liff.isLoggedIn()) { liff.login({ redirectUri: location.href }); return; }
+    uid = (await liff.getProfile()).userId;
+    token = liff.getAccessToken() || "";
+  }catch(e){
+    uid = new URLSearchParams(location.search).get("uid") || "";   // ทดสอบนอก LINE (REQUIRE_LIFF_AUTH=0)
+  }
+  try{
+    const res = await fetch("/api/dashboard?uid=" + encodeURIComponent(uid),
+                            { headers: token ? { Authorization: "Bearer " + token } : {} });
+    if (res.status === 404) return showError("ยังไม่มีข้อมูลสุขภาพ กรุณากรอกโปรไฟล์ในเมนู 'โปรไฟล์ผู้ใช้' ก่อนนะครับ");
+    if (!res.ok) return showError("เปิดหน้านี้จากในแอป LINE เท่านั้นครับ (ยืนยันตัวตนไม่สำเร็จ)");
+    DATA = await res.json();
+  }catch(e){ return showError("โหลดข้อมูลไม่สำเร็จ ลองใหม่อีกครั้งครับ"); }
+  $("loading").classList.add("hidden");
+  renderHeader();
+  selIdx = DATA.days.length - 1;
+  renderStrip(); renderDay(); renderWeek();
+  $("daily").classList.remove("hidden");
+}
+function showError(msg){ $("loading").classList.add("hidden"); const e=$("error"); e.textContent = msg; e.classList.remove("hidden"); }
+
+function renderHeader(){
+  const u = DATA.user;
+  const chips = (u.diseases.length ? u.diseases : ["ไม่มีโรคประจำตัว"]).map(d => `<span class="chip">${esc(d)}</span>`).join("");
+  $("who").innerHTML = `${u.name ? "คุณ" + esc(u.name) + " · " : ""}เป้า ${fmt(DATA.targets.energy_kcal)} kcal/วัน ${chips}`;
+}
+
+function renderStrip(){
+  $("strip").innerHTML = DATA.days.map((d,i) => {
+    const dt = parseD(d.date);
+    return `<div class="day ${i===selIdx?"sel":""} ${d.meal_count?"logged":""}" data-i="${i}">
+      <div class="n">${dt.getDate()}</div><div class="w">${WD[dt.getDay()]}</div><div class="dot"></div></div>`;
+  }).join("");
+  document.querySelectorAll(".day").forEach(el => el.onclick = () => { selIdx = +el.dataset.i; renderStrip(); renderDay(); });
+  const strip = $("strip"), sel = strip.querySelector(".day.sel");
+  if (sel) strip.scrollLeft = sel.offsetLeft - strip.clientWidth / 2 + sel.clientWidth / 2;
+}
+
+function renderDay(){
+  const d = DATA.days[selIdx];
+  $("dateLabel").textContent = thaiDate(d.date);
+  $("dateHint").textContent = d.date === DATA.today ? "วันนี้" : (selIdx === DATA.days.length-2 ? "เมื่อวาน" : "");
+  const e = d.nutrients.find(n => n.key === "energy_kcal");
+  const pct = e.target ? e.value / e.target : 0;
+  const C = 2 * Math.PI * 56;
+  const arc = $("ringArc");
+  arc.setAttribute("stroke-dasharray", `${Math.min(pct,1)*C} ${C}`);
+  arc.setAttribute("stroke", e.status === "high" ? "#e5533d" : "#1D9E75");
+  $("kcalBig").textContent = fmt(e.value);
+  $("kcalOf").textContent = `/ ${fmt(e.target)} kcal`;
+  const rest = e.target - e.value;
+  $("kcalKpi").innerHTML = d.meal_count === 0
+    ? `<span class="muted">ยังไม่มีบันทึกในวันนี้</span>`
+    : (rest >= 0 ? `ยังกินได้อีก<br><b>${fmt(rest)} kcal</b>` : `<span class="up">เกินเป้า</span><br><b class="up">${fmt(-rest)} kcal</b>`)
+      + `<br><span class="muted">บันทึก ${d.meal_count} มื้อ · ${Math.round(pct*100)}% ของเป้า</span>`;
+
+  const isToday = d.date === DATA.today;
+  $("nutBars").innerHTML = d.nutrients.filter(n => n.key !== "energy_kcal").map(n => {
+    const p = n.target ? Math.min(n.value / n.target, 1.0) * 100 : 0;
+    if (isToday && n.status === "low") n = {...n, status: "none"};   // วันนี้ยังกินไม่ครบ ไม่นับว่า "ขาด"
+    const limitWord = ["sodium_mg","potassium_mg","phosphorus_mg"].includes(n.key) ? "ไม่เกิน " : "";
+    return `<div class="nut"><div class="top"><span>${n.name}${d.meal_count?`<span class="pill ${n.status}">${ST_TH[n.status]}</span>`:""}</span>
+      <span><span class="val">${fmt(n.value)}</span> <span class="muted">/ ${limitWord}${fmt(n.target)} ${n.unit}</span></span></div>
+      <div class="bar"><i style="width:${p}%;background:${COLOR[d.meal_count?n.status:"none"]}"></i></div></div>`;
+  }).join("");
+
+  $("mealCount").textContent = d.meals.length ? `${d.meals.length} รายการ` : "";
+  $("meals").innerHTML = d.meals.length
+    ? d.meals.map(m => `<div class="meal"><span class="tag">${esc(m.meal)}</span><span class="nm">${esc(m.name)}${m.portion==="small"?" (จานเล็ก)":m.portion==="large"?" (จานใหญ่)":""}</span><span class="k">${fmt(m.kcal)} kcal</span></div>`).join("")
+    : `<div class="empty"><span class="ic">🍽️</span>ยังไม่ได้บันทึกอาหารในวันนี้<br>กด "แนะนำอาหาร" หรือพิมพ์บอกในแชท เช่น "กินข้าวผัดมื้อเที่ยง"</div>`;
+}
+
+function renderWeek(){
+  const w = DATA.week;
+  const V = {good:["😊","ดีมาก"], fair:["🙂","พอใช้"], poor:["😟","ควรปรับ"], nodata:["📝","ยังไม่มีข้อมูล"]}[w.verdict];
+  $("verdictCard").innerHTML = `<div class="verdict v-${w.verdict}"><div class="face">${V[0]}</div>
+    <div><div class="lbl">${V[1]}</div><p>${esc(w.headline)}</p>
+    <div class="muted" style="margin-top:4px">บันทึก ${w.days_logged}/7 วัน · เฉลี่ย ${w.avg_meals} มื้อ/วัน</div></div></div>`;
+
+  // กราฟแท่งพลังงาน 7 วัน + เส้นเป้า
+  const pts = DATA.week_chart, T = DATA.targets.energy_kcal || 1;
+  const maxV = Math.max(T * 1.3, ...pts.map(p => p.kcal)), W = 320, H = 150, bw = 28, gap = (W - 7*bw) / 8;
+  const y = v => H - 22 - (v / maxV) * (H - 36);
+  let svg = `<svg viewBox="0 0 ${W} ${H}" width="100%" style="display:block">`;
+  svg += `<line x1="0" x2="${W}" y1="${y(T)}" y2="${y(T)}" stroke="#1D9E75" stroke-dasharray="5 4" stroke-width="1.5"/>`;
+  svg += `<text x="${W-2}" y="${y(T)-5}" font-size="10" fill="#1D9E75" text-anchor="end">เป้า ${fmt(T)}</text>`;
+  pts.forEach((p,i) => {
+    const x = gap + i*(bw+gap), dt = parseD(p.date), over = p.kcal > T*1.1, low = p.logged && p.kcal < T*0.85 && p.date !== DATA.today;
+    const col = !p.logged ? "#dfe3e8" : over ? "#e5533d" : low ? "#f0a020" : "#1D9E75";
+    const h = p.logged ? Math.max(H - 22 - y(p.kcal), 3) : 3;
+    svg += `<rect x="${x}" y="${H-22-h}" width="${bw}" height="${h}" rx="6" fill="${col}"/>`;
+    svg += `<text x="${x+bw/2}" y="${H-7}" font-size="11" fill="#6b7480" text-anchor="middle">${WD[dt.getDay()]}${dt.getDate()}</text>`;
+  });
+  $("chart").innerHTML = svg + "</svg>";
+  $("chartNote").textContent = "แท่งเทา = ไม่ได้บันทึก";
+
+  $("basisNote").textContent = w.basis_days ? `ค่าเฉลี่ยจาก ${w.basis_days} วันที่บันทึก${w.basis_days < w.days_logged ? "ครบตั้งแต่ 2 มื้อ" : ""}` : "";
+  $("findings").innerHTML = w.findings.length ? w.findings.map(f => `
+    <div class="finding ${f.status}">
+      <div class="t"><span>${f.name}${f.critical ? '<span class="crit">สำคัญกับโรคของคุณ</span>' : ""}</span><span class="pill ${f.status}">${ST_TH[f.status]}</span></div>
+      <div class="n">เฉลี่ย ${fmt(f.avg)} / ${fmt(f.target)} ${f.unit} ต่อวัน (${f.pct}%)${f.days_over ? ` · เกินเป้า ${f.days_over} วัน` : ""}</div>
+      ${f.status !== "ok" && f.why ? `<div class="why">ℹ️ ${esc(f.why)}</div>` : ""}
+      ${f.status !== "ok" && f.advice ? `<div class="adv">👉 ${esc(f.advice)}</div>` : ""}
+    </div>`).join("") : `<div class="empty"><span class="ic">📝</span>ยังไม่มีบันทึกพอให้วิเคราะห์<br>บันทึกอย่างน้อยวันละ 2 มื้อ แล้วกลับมาดูใหม่นะครับ</div>`;
+
+  $("tips").innerHTML = w.tips.map(t => `<li>${esc(t)}</li>`).join("");
+  $("tipsCard").classList.toggle("hidden", !w.tips.length);
+
+  const c = DATA.compare;
+  const diff = (a,b,unit,lowerBetter=true) => {
+    if (a == null) return `<div class="v">-</div><div class="d muted">ยังไม่มีข้อมูล</div>`;
+    if (b == null) return `<div class="v">${fmt(a)} <span class="muted" style="font-size:12px">${unit}</span></div><div class="d muted">สัปดาห์ก่อนไม่มีข้อมูล</div>`;
+    const dd = a - b, cls = dd === 0 ? "muted" : ((dd < 0) === lowerBetter ? "down" : "up");
+    return `<div class="v">${fmt(a)} <span class="muted" style="font-size:12px">${unit}</span></div>
+            <div class="d ${cls}">${dd === 0 ? "เท่าเดิม" : (dd > 0 ? "▲ " : "▼ ") + fmt(Math.abs(dd)) + " จากสัปดาห์ก่อน"}</div>`;
+  };
+  $("cmp").innerHTML = `<div class="box"><div class="muted">พลังงานเฉลี่ย/วัน</div>${diff(c.kcal_this, c.kcal_prev, "kcal", false)}</div>
+                        <div class="box"><div class="muted">โซเดียมเฉลี่ย/วัน</div>${diff(c.na_this, c.na_prev, "mg", true)}</div>`;
+}
+
+document.querySelectorAll(".tab").forEach(t => t.onclick = () => {
+  document.querySelectorAll(".tab").forEach(x => x.classList.toggle("active", x === t));
+  if (!DATA) return;
+  $("daily").classList.toggle("hidden", t.dataset.tab !== "daily");
+  $("weekly").classList.toggle("hidden", t.dataset.tab !== "weekly");
+  window.scrollTo({top:0});
+});
+init();
+</script>
+</body>
+</html>

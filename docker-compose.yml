@@ -1,0 +1,31 @@
+# docker-compose.yml — Postgres + pgvector สำหรับ dev บนเครื่อง
+#
+# ใช้แทน PostgreSQL ที่ลงตรงบน Windows (D:/PostgreSQL) เฉพาะตอนพัฒนา RAG
+# เพราะ image นี้มี pgvector extension ติดตั้งมาให้พร้อมแล้ว ไม่ต้อง compile เอง
+#
+# วิธีใช้:
+#   1. ติดตั้ง Docker Desktop (ถ้ายังไม่มี): https://www.docker.com/products/docker-desktop
+#   2. รัน:  docker compose up -d
+#   3. แก้ .env: DATABASE_URL=postgresql://postgres:postgres@localhost:5433/ncd_chatbot
+#      (ใช้ port 5433 กันชนกับ PostgreSQL เดิมที่อาจรันอยู่แล้วที่ 5432)
+#   4. รัน db/schema.sql แล้วตามด้วย db/rag_schema.sql กับ DB ตัวใหม่นี้
+#      เช่นผ่าน pgAdmin: เพิ่ม server ใหม่ชี้ไปที่ localhost:5433
+#   5. หยุดใช้งาน:  docker compose down   (ข้อมูลยังอยู่ใน volume ไม่หาย)
+#      ลบข้อมูลทิ้งด้วย:  docker compose down -v
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: ncd_chatbot_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ncd_chatbot
+    ports:
+      - "5433:5432"   # เครื่อง:container — ใช้ 5433 กันชนกับ Postgres เดิม
+    volumes:
+      - ncd_pgdata:/var/lib/postgresql/data
+
+volumes:
+  ncd_pgdata:

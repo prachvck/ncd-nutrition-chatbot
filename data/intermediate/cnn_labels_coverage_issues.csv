@@ -1,0 +1,21 @@
+﻿Directory_Name,Dish_Name_English,Dish_Name_Thai,Category,Note
+01,Khao Na Kai,ข้าวหน้าไก่,มีปัญหา,"พบบน calforlife.com (kaodakai) แต่ข้อมูลว่างเปล่าทั้งหมด พลังงาน 0 kcal ไม่มีโปรตีน/คาร์บ/ไขมัน หน่วยบริโภคเขียนแค่ ""1"" ไม่ใช่กรัม เป็น entry ที่ผู้ใช้เว็บสร้างไว้แต่ไม่เคยกรอกข้อมูลจริง ใช้ไม่ได้"
+07,Gai Phat Med Mamuang Himmapan,ไก่ผัดเม็ดมะม่วงหิมพานต์,มีปัญหา,"พบบน calforlife.com มีข้อมูลจริง (335 kcal โปรตีน 30g คาร์บ 20g ไขมัน 15g) แต่หน่วยบริโภคเป็น ""1 place"" ไม่ใช่กรัม แปลงเป็นค่าต่อ 100g ให้อัตโนมัติไม่ได้ ต้องกะน้ำหนักจริงเอง"
+10,Pla Nueng See Ew,ปลานึ่งซีอิ๊ว,มีปัญหา,"พบบน calforlife.com มีข้อมูลจริง (262 kcal โปรตีน 35g คาร์บ 8g ไขมัน 10g) แต่หน่วยบริโภคเป็น ""1 ตัว"" (1 fish) ไม่ใช่กรัม แปลงหน่วยอัตโนมัติไม่ได้"
+12,Khai Krata,ไข่กระทะ,มีปัญหา,"พบบน calforlife.com มีข้อมูลจริง (410 kcal โปรตีน 25g คาร์บ 10g ไขมัน 30g) แต่หน่วยบริโภคเป็น ""1 จาน"" (1 plate) ไม่ใช่กรัม แปลงหน่วยอัตโนมัติไม่ได้"
+19,Phat Thai Ho Khai,ผัดไทยห่อไข่,มีปัญหา,"พบบน calforlife.com แต่หน่วยบริโภคเขียนแค่ ""1"" ไม่ระบุน้ำหนัก และพลังงาน 1088.7 kcal สูงผิดปกติถ้าคิดว่าเป็นหน่วยมาตรฐาน ข้อมูลไม่น่าเชื่อถือพอจะใช้ตรงๆ"
+34,Phat Pak Bung Fai Daeng,ผัดผักบุ้งไฟแดง,มีปัญหา,"พบบน calforlife.com เป็นเมนู ""ข้าวราด, ผัดผักบุ้งไฟแดง"" (รวมข้าวมาด้วย ไม่ใช่กับข้าวเดี่ยวๆ) หน่วยบริโภคเป็น ""1set"" ไม่ใช่กรัม แปลงหน่วยอัตโนมัติไม่ได้"
+49,Yam Pla Duk Fu,ยำปลาดุกฟู,มีปัญหา,"พบบน calforlife.com มีข้อมูลจริง (323 kcal โปรตีน 11g คาร์บ 0g ไขมัน 31g) แต่หน่วยบริโภคเป็น ""1 ชุด"" (1 set) ไม่ใช่กรัม แปลงหน่วยอัตโนมัติไม่ได้ และคาร์บ 0g น่าสงสัย (ปกติยำใส่มะม่วง/มะนาวควรมีคาร์บบ้าง)"
+60,Kua Prik Kluea,คั่วพริกเกลือ,มีปัญหา,"พบบน calforlife.com แต่เป็นสินค้าแบรนด์บรรจุภัณฑ์ (""อีททูฟิต สามชั้นคั่วพริกเกลือ"") ไม่ใช่เมนูทำสดทั่วไป ไม่เหมาะเป็นตัวแทนเมนูกลางๆ สำหรับ label นี้"
+00,Khao Phat Amerikan,ข้าวผัดอเมริกัน,ไม่มีข้อมูล,ไม่พบทั้งใน foods_master_v2.csv / calforlife raw+เว็บปัจจุบัน / thaifcd raw / nutritionaddsugar.csv
+11,Phat Khanaeng,ผัดแขนง,ไม่มีข้อมูล,ไม่พบทั้งใน foods_master_v2.csv / calforlife raw+เว็บปัจจุบัน / thaifcd raw / nutritionaddsugar.csv
+22,Khao Chae,ข้าวแช่,ไม่มีข้อมูล,ไม่พบทั้งใน foods_master_v2.csv / calforlife raw+เว็บปัจจุบัน / thaifcd raw / nutritionaddsugar.csv
+36,Yam Hoi,ยำหอย,ไม่มีข้อมูล,ไม่พบทั้งใน foods_master_v2.csv / calforlife raw+เว็บปัจจุบัน / thaifcd raw / nutritionaddsugar.csv
+31,Pla Muek Phat Nam Dam,ปลาหมึกผัดน้ำดำ,ไม่มีข้อมูล,ไม่พบทั้งใน foods_master_v2.csv / calforlife raw+เว็บปัจจุบัน / thaifcd raw / nutritionaddsugar.csv
+33,Kang Thot Kratiam,กั้งทอดกระเทียม,ไม่มีข้อมูล,ไม่พบทั้งใน foods_master_v2.csv / calforlife raw+เว็บปัจจุบัน / thaifcd raw / nutritionaddsugar.csv (มีแต่กั้งดิบเป็นวัตถุดิบ)
+44,Pu Nim Thot Kratiam,ปูนิ่มทอดกระเทียม,ไม่มีข้อมูล,ไม่พบทั้งใน foods_master_v2.csv / calforlife raw+เว็บปัจจุบัน / thaifcd raw / nutritionaddsugar.csv (มีแต่ปูนิ่มดิบแช่แข็งเป็นวัตถุดิบ)
+45,Kalampli Phat Nam Pla,กะหล่ำปลีผัดน้ำปลา,ไม่มีข้อมูล,ไม่พบทั้งใน foods_master_v2.csv / calforlife raw+เว็บปัจจุบัน / thaifcd raw / nutritionaddsugar.csv
+53,Hoi Cho,หอยจ๊อ,ไม่มีข้อมูล,ไม่พบทั้งใน foods_master_v2.csv / calforlife raw+เว็บปัจจุบัน / thaifcd raw / nutritionaddsugar.csv
+54,Hoi Phat Nam Prik Phao,หอยผัดน้ำพริกเผา,ไม่มีข้อมูล,ไม่พบทั้งใน foods_master_v2.csv / calforlife raw+เว็บปัจจุบัน / thaifcd raw / nutritionaddsugar.csv (มีแต่น้ำพริกเผาเปล่าๆ เป็นวัตถุดิบ)
+93,Pu Nueng,ปูนึ่ง,ไม่มีข้อมูล,ไม่พบทั้งใน foods_master_v2.csv / calforlife raw+เว็บปัจจุบัน / thaifcd raw / nutritionaddsugar.csv
+04,Krapo Pla Nam Dang,กระเพาะปลาน้ำแดง,ไม่มีข้อมูล,"มีแต่กระเพาะปลาสูตรทั่วไป/ทอด/เส้นหมี่ ไม่มีสูตรน้ำแดงเจาะจงในทุกแหล่งที่เช็ค (foods_master_v2.csv / calforlife raw+เว็บปัจจุบัน / thaifcd raw / nutritionaddsugar.csv)"
